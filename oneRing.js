@@ -22,20 +22,13 @@ var backC = getBack(cx,cy,bigHyp);
 var backB = getBack(bx,by,smallHyp);
 var backD = getBack(dx,dy,smallHyp);
 
-// console.log('backA = ' + backA);
-// console.log('backC = ' + backC);
-// console.log('backB = ' + backB);
-// console.log('backD = ' + backD);
-
 function separate (x,y,n){
-
   var obj = {
     frontArrx: [],
     frontArry: [],
     backArrx: [],
     backArry: []
   }
-
 
     for(i=0;i<x.length;i++){
       if(i <= n){
@@ -55,6 +48,13 @@ var mainObj = {
   objC: separate (cx,cy,backC),
   objD: separate (dx,dy,backD)
 }
+
+var mainObj2 = {
+  objA: separate (ax,ay,backA),
+  objB: separate (bx,by,backB),
+  objC: separate (cx,cy,backC),
+  objD: separate (dx,dy,backD)
+}
 //console.log(mainObj)
 mainObj.objA.backArrx.reverse();
 mainObj.objA.backArry.reverse();
@@ -64,8 +64,15 @@ mainObj.objC.backArrx.reverse();
 mainObj.objC.backArry.reverse();
 mainObj.objD.backArrx.reverse();
 mainObj.objD.backArry.reverse();
-// console.log(mainObj);
 
+mainObj2.objA.backArrx.reverse();
+mainObj2.objA.backArry.reverse();
+mainObj2.objB.backArrx.reverse();
+mainObj2.objB.backArry.reverse();
+mainObj2.objC.backArrx.reverse();
+mainObj2.objC.backArry.reverse();
+mainObj2.objD.backArrx.reverse();
+mainObj2.objD.backArry.reverse();
 
 function equalOut (bx1,by1,bx2,by2,fx1,fy1,fx2,fy2){
   var dif = Math.abs(bx1.length - bx2.length);
@@ -86,16 +93,24 @@ function equalOut (bx1,by1,bx2,by2,fx1,fy1,fx2,fy2){
   }
 }
 
+equalOut(mainObj.objB.backArrx,mainObj.objB.backArry,mainObj.objD.backArrx,mainObj.objD.backArry,mainObj.objB.frontArrx,mainObj.objB.frontArry,mainObj.objD.frontArrx,mainObj.objD.frontArry);
+
+equalOut(mainObj2.objC.backArrx,mainObj2.objC.backArry,mainObj2.objD.backArrx,mainObj2.objD.backArry,mainObj2.objC.frontArrx,mainObj2.objC.frontArry,mainObj2.objD.frontArrx,mainObj2.objD.frontArry);
+
 equalOut(mainObj.objA.backArrx,mainObj.objA.backArry,mainObj.objC.backArrx,mainObj.objC.backArry,mainObj.objA.frontArrx,mainObj.objA.frontArry,mainObj.objC.frontArrx,mainObj.objC.frontArry);
-//console.log(mainObj);
+
+equalOut(mainObj2.objC.backArrx,mainObj2.objC.backArry,mainObj2.objD.backArrx,mainObj2.objD.backArry,mainObj2.objC.frontArrx,mainObj2.objC.frontArry,mainObj2.objD.frontArrx,mainObj2.objD.frontArry);
+
+
 console.log(mainObj.objA);
-console.log(mainObj.objC)
+console.log(mainObj.objC);
 
 
 var text = '';
 var buffer = '';
+var finalCount = 0;
 
-function plot(x1,y1,x2,y2){
+function plot(x1,y1,x2,y2,s){
 
    //1 = white
    //0 = black
@@ -115,20 +130,27 @@ function plot(x1,y1,x2,y2){
         m--
         //end should be 0
       }
-
       buffer += 'newbuffer' + '\n';
-      text += 'addvalue ' + k + ' ' + x1[i] + ' ' + y1[i] + '\n';
-      text += 'addvalue ' + k + ' ' + x2[i] + ' ' + y2[i] + '\n';
-      text += 'bcolor ' + put + ' ' + put + ' ' + put + ' ' + k + '\n'
+      text += 'addvalue ' + finalCount + ' ' + x1[i] + ' ' + y1[i] + '\n';
+      text += 'addvalue ' + finalCount + ' ' + x2[i] + ' ' + y2[i] + '\n';
+
+      if(s == 's'){
+        text += 'bcolor ' + .9 + ' ' + put + ' ' + put + ' ' + finalCount + '\n'
+      } else{
+        text += 'bcolor ' + put + ' ' + put + ' ' + put + ' ' + finalCount + '\n'
+      }
       k++
+      finalCount++
    }
 }
 
-plot(mainObj.objA.backArrx,mainObj.objA.backArry,mainObj.objC.backArrx,mainObj.objC.backArry);
+plot(mainObj.objB.backArrx,mainObj.objB.backArry,mainObj.objD.backArrx,mainObj.objD.backArry,'b');
+plot(mainObj2.objC.backArrx,mainObj2.objC.backArry,mainObj2.objD.backArrx,mainObj2.objD.backArry,'s');
+plot(mainObj.objA.frontArrx,mainObj.objA.frontArry,mainObj.objC.frontArrx,mainObj.objC.frontArry,'b');
+plot(mainObj2.objC.frontArrx,mainObj2.objC.frontArry,mainObj2.objD.frontArrx,mainObj2.objD.frontArry,'s');
 
 var extra = 'blinewidth 1 all' + '\n' + 'drawframe no' + '\n' + 'asetticks x no' + '\n' + 'asetticks y no' + '\n' + 'asetminticks x no' + '\n' + 'asetminticks y no' + '\n' +'framewidth 0' + '\n' + 'bstyle yes no no no no no no yes no no 0' + '\n' + 'margins 0 0 0 0' + '\n' + 'range x -1.2 1.2' + '\n' + 'range y -1.2 1.2';
 
 var end = buffer + text + extra;
 console.log(end);
 
-//as of here 'plot function will generate macro for shading ONE back or front'

@@ -120051,7 +120051,7 @@ function present(ax,ay,bx,by,cx,cy,dx,dy){
   console.log('frontC = ' + frontC);
 
   //var mainFront = frontA;
-  if (frontA >= frontC){
+  if (frontA <= frontC){
     mainFront = frontA;
   } else{
     mainFront = frontC;
